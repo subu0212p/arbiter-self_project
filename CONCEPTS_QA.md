@@ -24,6 +24,12 @@ A: We check whether the crashed program's stderr contains `MemoryError` (Python)
 **Q: Why does the executor interface exist as a base class instead of the judge calling `SubprocessExecutor` directly?**
 A: So the judging logic (`judge.py`) depends only on the `Executor` interface (`run()` returning an `ExecutionResult`), not on any specific sandboxing technology. Swapping `SubprocessExecutor` for `DockerExecutor` — or something stronger in the future — requires touching zero lines of `judge.py`, `queue_worker.py`, or `app.py`.
 
+**Q: What changes on Windows? Why can't the same code just work everywhere?**
+A: `resource.setrlimit()` and the constants used here (`RLIMIT_CPU`, `RLIMIT_AS`, `RLIMIT_NPROC`) are POSIX-only — the `resource` module doesn't exist on Windows at all, so importing it crashes immediately on a Windows machine. `subprocess_executor.py` handles this with two code paths chosen at import time (`IS_POSIX = os.name == "posix"`): the original `preexec_fn`/`resource` approach on Linux/Mac, and a Windows fallback (`_run_windows()`) that approximates the same protections differently — a wall-clock `timeout` still catches infinite loops (TLE), and a background thread polls the child process's memory via `psutil` and kills it if it crosses the limit (MLE). One protection genuinely isn't recreated on Windows: `RLIMIT_NPROC` (the fork-bomb defense) has no practical Windows equivalent here, so that case is only enforced on the POSIX path. That's a real, honest trade-off worth naming directly if asked, not something to gloss over.
+
+**Q: Why is the Windows memory watchdog "polling-based" instead of a hard limit like `RLIMIT_AS`?**
+A: The background thread checks the child process's memory usage every 20 milliseconds and kills it once it's over the limit — that's a check-then-react loop, not an instant OS-enforced ceiling. A process that allocates a very large block of memory in a single instant, between two checks, could in principle spike past the limit for a brief moment before getting caught. `RLIMIT_AS` on Linux has no such gap — the kernel refuses the allocation the instant it would exceed the limit. It's a meaningfully weaker guarantee, which is part of why real production sandboxing for this kind of problem tends to run on Linux (or in containers) rather than depending on a Windows-only deployment.
+
 ---
 
 ## Milestone 2: Verdicts

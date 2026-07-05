@@ -32,6 +32,8 @@ This is the one project of the three that's a real full-stack web application (f
 
 **A genuine, named limitation, verified by testing:** distinguishing "killed for using too much memory" from "crashed for some other reason" is *not* perfectly clean with OS resource limits — there's no single unambiguous signal for it the way a container runtime's OOM killer provides. We detect it with a heuristic (checking whether `MemoryError` or `bad_alloc` shows up in the crashed program's error output), which was tested directly and confirmed to work for both Python and C++ — but it's still a heuristic, not a guarantee, and is worth naming as such if asked.
 
+**A second genuine, named limitation — this one about the OS, not the heuristic:** `resource.setrlimit()` (and `RLIMIT_CPU`/`RLIMIT_AS`/`RLIMIT_NPROC`) only exist on POSIX systems (Linux, Mac) — Windows has no equivalent in the standard library at all. `subprocess_executor.py` handles this honestly with two code paths: the `resource`-based one described above on Linux/Mac, and a Windows fallback that uses the wall-clock `timeout` (still catches infinite loops) plus a background thread that polls the child process's memory via `psutil` and kills it if it goes over the limit. The one piece that doesn't have a good Windows equivalent is the fork-bomb defense (`RLIMIT_NPROC`) — see `CONCEPTS_QA.md`, Milestone 1, for the full trade-off. This is exactly the kind of "why doesn't this just work everywhere" question a project like this should be ready to answer in an interview.
+
 ---
 
 ### Milestone 2: Verdicts

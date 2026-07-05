@@ -14,7 +14,7 @@ A small online judge — like a mini LeetCode/Codeforces — built from scratch:
 | File | What it is |
 |---|---|
 | `executor_base.py` | The `Executor` interface both sandboxing backends implement. |
-| `subprocess_executor.py` | **Tested and verified.** Sandboxes code using OS resource limits (CPU/memory/process count) on a plain subprocess. |
+| `subprocess_executor.py` | **Tested and verified.** Sandboxes code using OS resource limits (CPU/memory/process count) on Linux/Mac; falls back to a timeout + psutil memory watchdog on Windows, since `resource.setrlimit` is POSIX-only (see CONCEPTS_QA.md, Milestone 1). |
 | `docker_executor.py` | Container-based sandbox. **Not tested here — no Docker in this build environment.** Verify it yourself before relying on it (see its module docstring). |
 | `judge.py` | Runs a submission against a problem's test cases and decides AC/WA/TLE/MLE/RE/CE. |
 | `problems.py` / `problems_data.json` | The problem bank (statement + test cases). |
@@ -25,21 +25,29 @@ A small online judge — like a mini LeetCode/Codeforces — built from scratch:
 
 ## How to run it
 
-**1. Install Flask (one-time):**
+**On Windows, use `python` instead of `python3` below** (Windows has no `python3` alias — just `python`). You'll also need `psutil`, used for the memory-limit fallback described above.
+
+**1. Install dependencies (one-time):**
+
+Mac/Linux:
 ```
 pip install flask --break-system-packages
 ```
+Windows:
+```
+pip install flask psutil
+```
 
 **2. Run the automated tests:**
-```
-python3 tests.py
-```
+
+Mac/Linux: `python3 tests.py`   |   Windows: `python tests.py`
+
 You should see 10 `PASS` lines and "All tests passed." (takes a few seconds — some tests deliberately run code until it hits a time/memory limit.)
 
 **3. Run the actual web app:**
-```
-python3 app.py
-```
+
+Mac/Linux: `python3 app.py`   |   Windows: `python app.py`
+
 Then open `http://127.0.0.1:5050` in a browser. Pick a problem, write a solution, hit Submit.
 
 Try these to see different verdicts on "Sum of Two Numbers":

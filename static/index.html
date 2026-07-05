@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Arbiter — Online Judge</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Arbiter</h1>
+    <p class="tagline">A small online judge with real sandboxed code execution behind it.</p>
+  </header>
+
+  <main>
+    <section id="problem-list">
+      <h2>Problems</h2>
+      <ul id="problems"></ul>
+    </section>
+
+    <section id="problem-detail" hidden>
+      <button id="back-btn">&larr; Back to problems</button>
+      <h2 id="problem-title"></h2>
+      <p id="problem-difficulty"></p>
+      <pre id="problem-statement"></pre>
+      <h3>Sample</h3>
+      <pre id="problem-sample"></pre>
+
+      <label for="language">Language</label>
+      <select id="language">
+        <option value="python">Python</option>
+        <option value="cpp">C++</option>
+      </select>
+
+      <textarea id="code" rows="16" spellcheck="false" placeholder="Write your solution here. Read input with input()/std::cin, print with print()/std::cout."></textarea>
+      <button id="submit-btn">Submit</button>
+
+      <div id="verdict"></div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+:root {
+  --bg: #0f1115;
+  --panel: #171a21;
+  --border: #2a2e37;
+  --text: #e6e8eb;
+  --muted: #9aa1ac;
+  --accent: #4f8cff;
+  --ok: #3fbf6f;
+  --fail: #e5534b;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+  margin: 0;
+  padding: 0 1.5rem 3rem;
+}
+
+header {
+  padding: 2rem 0 1rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1.5rem;
+}
+
+h1 { margin: 0; font-size: 1.8rem; }
+.tagline { color: var(--muted); margin: 0.25rem 0 0; }
+
+#problems {
+  list-style: none;
+  padding: 0;
+  max-width: 500px;
+}
+
+#problems li {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+}
+
+#problems li:hover { border-color: var(--accent); }
+
+#problem-detail {
+  max-width: 700px;
+}
+
+#back-btn {
+  background: none;
+  border: none;
+  color: var(--accent);
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+pre {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  white-space: pre-wrap;
+}
+
+label { display: block; margin: 1rem 0 0.25rem; color: var(--muted); }
+
+select, textarea, button {
+  font-family: "SF Mono", Consolas, monospace;
+  font-size: 0.95rem;
+}
+
+select {
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.4rem;
+}
+
+textarea {
+  width: 100%;
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 0.5rem;
+  resize: vertical;
+}
+
+#submit-btn {
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem 1.5rem;
+  margin-top: 1rem;
+  cursor: pointer;
+}
+
+#submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+#verdict {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.verdict-ac { background: rgba(63, 191, 111, 0.15); color: var(--ok); }
+.verdict-fail { background: rgba(229, 83, 75, 0.15); color: var(--fail); }

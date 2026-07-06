@@ -62,7 +62,16 @@ class SubprocessExecutor(Executor):
         try:
             result = subprocess.run(
                 ["g++", "-O2", "-o", binary_path, source_path],
-                capture_output=True, text=True, timeout=10,
+                # 25s, not 10s: #include <bits/stdc++.h> alone pulls in
+                # almost the entire standard library, and on Windows the
+                # FIRST time a freshly-installed g++.exe/cc1plus.exe
+                # actually runs, antivirus/Windows Defender real-time
+                # scanning of those binaries can add several seconds on
+                # top of normal compile time. 10s was tuned against this
+                # project's own Linux build environment, where neither of
+                # those costs exist - it was too tight for a cold-start
+                # Windows compile.
+                capture_output=True, text=True, timeout=25,
             )
         except FileNotFoundError:
             # g++ isn't installed / isn't on PATH. Without this catch, this
@@ -77,6 +86,19 @@ class SubprocessExecutor(Executor):
                 "g++ not found. A C++ compiler isn't installed or isn't on "
                 "PATH - see README.md's 'C++ submissions on Windows' note. "
                 "Python submissions don't need this."
+            ), binary_path
+        except subprocess.TimeoutExpired:
+            # Compilation itself ran past the timeout (distinct from
+            # FileNotFoundError above - g++ WAS found and started running).
+            # Without this catch, this exception would propagate up to
+            # queue_worker.py's generic except-Exception backstop, which
+            # reports a vague "internal judging error" instead of a verdict
+            # a user submitting code would actually understand.
+            return False, (
+                "Compilation timed out. On Windows this is often antivirus "
+                "scanning a freshly-installed g++.exe the first time it "
+                "runs - try submitting again; it's usually fast after the "
+                "first compile."
             ), binary_path
         return result.returncode == 0, result.stderr, binary_path
 

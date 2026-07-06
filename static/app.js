@@ -108,8 +108,32 @@ async function pollSubmission(submissionId) {
 }
 
 function renderVerdict(result) {
-  verdictEl.textContent = `${result.verdict} — passed ${result.passed}/${result.total} test cases`;
+  verdictEl.innerHTML = "";
   verdictEl.className = result.verdict === "AC" ? "verdict-ac" : "verdict-fail";
+
+  const summary = document.createElement("div");
+  summary.textContent = `${result.verdict} — passed ${result.passed}/${result.total} test cases`;
+  verdictEl.appendChild(summary);
+
+  // Show WHY it failed, not just that it failed. Without this, a CE
+  // (compile error) or RE (runtime error) gives no way to see the actual
+  // compiler/runtime message, which is the one thing you actually need to
+  // fix the code - this data was already coming back from the API in
+  // result.results, it just wasn't being rendered.
+  if (result.verdict !== "AC" && result.results && result.results.length > 0) {
+    const failing = result.results[result.results.length - 1];
+    const detail = document.createElement("pre");
+    detail.className = "verdict-detail";
+
+    if (failing.stderr) {
+      detail.textContent = failing.stderr;
+    } else if (failing.verdict === "WA") {
+      detail.textContent = `Expected:\n${failing.expected}\n\nGot:\n${failing.actual}`;
+    } else {
+      detail.textContent = "(no further detail available)";
+    }
+    verdictEl.appendChild(detail);
+  }
 }
 
 submitBtn.addEventListener("click", submitCode);

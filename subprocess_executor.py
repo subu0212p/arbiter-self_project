@@ -59,10 +59,25 @@ class SubprocessExecutor(Executor):
     def _compile_cpp(self, source_path: str, workdir: str):
         binary_name = "a.out" if IS_POSIX else "a.exe"
         binary_path = os.path.join(workdir, binary_name)
-        result = subprocess.run(
-            ["g++", "-O2", "-o", binary_path, source_path],
-            capture_output=True, text=True, timeout=10,
-        )
+        try:
+            result = subprocess.run(
+                ["g++", "-O2", "-o", binary_path, source_path],
+                capture_output=True, text=True, timeout=10,
+            )
+        except FileNotFoundError:
+            # g++ isn't installed / isn't on PATH. Without this catch, this
+            # exception would propagate all the way up through judge.py
+            # into the worker thread in queue_worker.py - if that thread
+            # had nothing wrapping it, it would die silently and the
+            # submission would be stuck showing "Judging..." forever. We
+            # surface it as a normal CE instead, with a message that
+            # actually says what's wrong (see README's "C++ submissions"
+            # note for how to install a compiler on Windows).
+            return False, (
+                "g++ not found. A C++ compiler isn't installed or isn't on "
+                "PATH - see README.md's 'C++ submissions on Windows' note. "
+                "Python submissions don't need this."
+            ), binary_path
         return result.returncode == 0, result.stderr, binary_path
 
     def _run_posix(self, run_cmd, stdin, time_limit, memory_limit_mb):

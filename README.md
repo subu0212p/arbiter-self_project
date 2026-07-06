@@ -55,6 +55,12 @@ Try these to see different verdicts on "Sum of Two Numbers":
 - `print(0)` → **WA**
 - `1/0` → **RE**
 
+### C++ submissions on Windows
+
+C++ submissions need a `g++` compiler on your PATH. Windows doesn't ship one — you'd need to install a toolchain like MinGW-w64 (e.g. via `winget install -e --id MSYS2.MSYS2`, then installing `mingw-w64-gcc` inside it) and add it to PATH, or use WSL. **Python submissions don't need this at all** and are the easiest way to try the judge — if you just want to see it work, stick to Python.
+
+If `g++` isn't found, a C++ submission now cleanly returns a **CE** verdict explaining that, instead of hanging on "Judging..." forever (an earlier bug — an uncaught exception from the missing compiler was silently killing the background worker thread; fixed by catching it in `subprocess_executor.py`'s `_compile_cpp` and, as a second safety net, wrapping the whole judging call in `queue_worker.py` so no single bad submission can ever take down a worker again).
+
 ## Verified before calling this done
 
 Every executor verdict path (OK, RE, TLE, MLE, CE) was tested against real running code, not mocked. The judge's AC/WA logic was tested against both a correct and an incorrect solution. The queue was tested submit-to-done. The full Flask app was tested by starting the real server and hitting every endpoint with `curl`, including a complete submit-and-poll cycle for both a correct and incorrect submission. `DockerExecutor` is the one piece **not** verified here — see `OVERVIEW.md`/`CONCEPTS_QA.md`, Milestone 8, for why that's stated honestly rather than hidden.

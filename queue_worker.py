@@ -58,6 +58,22 @@ class SubmissionQueue:
                     }
                 continue
 
-            outcome = judge_mod.judge_submission(self._executor, code, language, problem)
-            with self._lock:
-                self._results[submission_id] = {"status": "done", **outcome}
+            # Deliberately broad except: a worker thread is a long-lived
+            # daemon thread pulled from a shared pool. Without this catch,
+            # ANY unexpected exception here (a missing compiler, a bad
+            # problem definition, anything) would kill this thread
+            # permanently and leave the submission stuck at "running"
+            # forever - the frontend would poll "Judging..." with no
+            # timeout and no way to know something broke. Catching here
+            # keeps the worker alive to process the next job and reports
+            # the failure back to the client instead of hanging silently.
+            try:
+                outcome = judge_mod.judge_submission(self._executor, code, language, problem)
+                with self._lock:
+                    self._results[submission_id] = {"status": "done", **outcome}
+            except Exception as exc:
+                with self._lock:
+                    self._results[submission_id] = {
+                        "status": "error",
+                        "message": f"internal judging error: {exc}",
+                    }

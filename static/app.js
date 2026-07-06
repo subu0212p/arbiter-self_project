@@ -24,7 +24,17 @@ async function loadProblems() {
   problemListEl.innerHTML = "";
   for (const p of problems) {
     const li = document.createElement("li");
-    li.textContent = `${p.title} (${p.difficulty})`;
+
+    const titleSpan = document.createElement("span");
+    titleSpan.className = "problem-title";
+    titleSpan.textContent = p.title;
+
+    const badge = document.createElement("span");
+    badge.className = `badge badge-${p.difficulty.toLowerCase()}`;
+    badge.textContent = p.difficulty;
+
+    li.appendChild(titleSpan);
+    li.appendChild(badge);
     li.addEventListener("click", () => openProblem(p.id));
     problemListEl.appendChild(li);
   }
@@ -35,7 +45,11 @@ async function openProblem(id) {
   const problem = await res.json();
   currentProblemId = id;
   titleEl.textContent = problem.title;
-  difficultyEl.textContent = `Difficulty: ${problem.difficulty}`;
+  difficultyEl.innerHTML = "";
+  const badge = document.createElement("span");
+  badge.className = `badge badge-${problem.difficulty.toLowerCase()}`;
+  badge.textContent = problem.difficulty;
+  difficultyEl.appendChild(badge);
   statementEl.textContent = problem.statement;
   sampleEl.textContent =
     `Input:\n${problem.samples[0].input}\nExpected output:\n${problem.samples[0].expected_output}`;

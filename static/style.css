@@ -1,12 +1,17 @@
 :root {
   --bg: #0f1115;
   --panel: #171a21;
+  --panel-hover: #1d212b;
   --border: #2a2e37;
   --text: #e6e8eb;
   --muted: #9aa1ac;
   --accent: #4f8cff;
+  --accent-hover: #6ba0ff;
   --ok: #3fbf6f;
   --fail: #e5534b;
+  --easy: #3fbf6f;
+  --medium: #e0a832;
+  --hard: #e5534b;
 }
 
 * { box-sizing: border-box; }
@@ -19,34 +24,68 @@ body {
   padding: 0 1.5rem 3rem;
 }
 
-header {
-  padding: 2rem 0 1rem;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 1.5rem;
+header, main {
+  max-width: 760px;
+  margin: 0 auto;
 }
 
-h1 { margin: 0; font-size: 1.8rem; }
-.tagline { color: var(--muted); margin: 0.25rem 0 0; }
+header {
+  padding: 2.5rem 0 1.25rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1.75rem;
+}
+
+h1 { margin: 0; font-size: 2rem; letter-spacing: -0.02em; }
+.tagline { color: var(--muted); margin: 0.4rem 0 0; font-size: 0.95rem; }
+
+#problem-list h2 { font-size: 1.1rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 1rem; }
 
 #problems {
   list-style: none;
   padding: 0;
-  max-width: 500px;
+  margin: 0;
+  display: grid;
+  gap: 0.6rem;
 }
 
 #problems li {
   background: var(--panel);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
-  margin-bottom: 0.5rem;
+  border-radius: 10px;
+  padding: 0.9rem 1.1rem;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
 }
 
-#problems li:hover { border-color: var(--accent); }
+#problems li:hover {
+  border-color: var(--accent);
+  background: var(--panel-hover);
+  transform: translateY(-1px);
+}
+
+.problem-title {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+}
+
+.badge-easy   { color: var(--easy);   background: rgba(63, 191, 111, 0.15); }
+.badge-medium { color: var(--medium); background: rgba(224, 168, 50, 0.15); }
+.badge-hard   { color: var(--hard);   background: rgba(229, 83, 75, 0.15); }
 
 #problem-detail {
-  max-width: 700px;
+  max-width: 760px;
 }
 
 #back-btn {
@@ -55,19 +94,28 @@ h1 { margin: 0; font-size: 1.8rem; }
   color: var(--accent);
   cursor: pointer;
   padding: 0;
-  margin-bottom: 1rem;
-  font-size: 0.95rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.9rem;
+  transition: color 0.15s ease;
 }
+
+#back-btn:hover { color: var(--accent-hover); }
+
+#problem-title { font-size: 1.5rem; margin-bottom: 0.25rem; }
+#problem-difficulty { margin: 0 0 1rem; }
 
 pre {
   background: var(--panel);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 1rem;
   white-space: pre-wrap;
+  line-height: 1.5;
 }
 
-label { display: block; margin: 1rem 0 0.25rem; color: var(--muted); }
+h3 { font-size: 0.9rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin: 1.5rem 0 0.5rem; }
+
+label { display: block; margin: 1.25rem 0 0.35rem; color: var(--muted); font-size: 0.9rem; }
 
 select, textarea, button {
   font-family: "SF Mono", Consolas, monospace;
@@ -79,7 +127,7 @@ select {
   color: var(--text);
   border: 1px solid var(--border);
   border-radius: 6px;
-  padding: 0.4rem;
+  padding: 0.45rem 0.6rem;
 }
 
 textarea {
@@ -87,29 +135,39 @@ textarea {
   background: var(--panel);
   color: var(--text);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 1rem;
   margin-top: 0.5rem;
   resize: vertical;
+  line-height: 1.5;
+}
+
+textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--accent);
 }
 
 #submit-btn {
   background: var(--accent);
   color: white;
   border: none;
-  border-radius: 6px;
-  padding: 0.6rem 1.5rem;
-  margin-top: 1rem;
+  border-radius: 8px;
+  padding: 0.65rem 1.75rem;
+  margin-top: 1.25rem;
   cursor: pointer;
+  font-weight: 600;
+  transition: background 0.15s ease;
 }
 
+#submit-btn:hover:not(:disabled) { background: var(--accent-hover); }
 #submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
 #verdict {
-  margin-top: 1rem;
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
+  margin-top: 1.25rem;
+  padding: 0.85rem 1.1rem;
+  border-radius: 10px;
   font-weight: 600;
+  min-height: 1.2rem;
 }
 
 .verdict-ac { background: rgba(63, 191, 111, 0.15); color: var(--ok); }

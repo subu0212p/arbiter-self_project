@@ -34,5 +34,89 @@
       {"input": "1\n", "expected_output": "NO"},
       {"input": "97\n", "expected_output": "YES"}
     ]
+  },
+  {
+    "id": "factorial",
+    "title": "Factorial",
+    "difficulty": "Easy",
+    "statement": "Read a single non-negative integer n and print n! (n factorial). By definition, 0! = 1.",
+    "test_cases": [
+      {"input": "5\n", "expected_output": "120"},
+      {"input": "0\n", "expected_output": "1"},
+      {"input": "1\n", "expected_output": "1"},
+      {"input": "7\n", "expected_output": "5040"}
+    ]
+  },
+  {
+    "id": "array-sum",
+    "title": "Sum of an Array",
+    "difficulty": "Easy",
+    "statement": "Read an integer n, then n integers each on its own line. Print the sum of all n integers.",
+    "test_cases": [
+      {"input": "3\n1\n2\n3\n", "expected_output": "6"},
+      {"input": "4\n-1\n-2\n3\n10\n", "expected_output": "10"},
+      {"input": "1\n5\n", "expected_output": "5"}
+    ]
+  },
+  {
+    "id": "count-vowels",
+    "title": "Count Vowels",
+    "difficulty": "Easy",
+    "statement": "Read a single line of text and print how many vowels (a, e, i, o, u — case-insensitive) it contains.",
+    "test_cases": [
+      {"input": "hello\n", "expected_output": "2"},
+      {"input": "AEIOU\n", "expected_output": "5"},
+      {"input": "xyz\n", "expected_output": "0"},
+      {"input": "Programming\n", "expected_output": "3"}
+    ]
+  },
+  {
+    "id": "max-in-array",
+    "title": "Maximum in an Array",
+    "difficulty": "Medium",
+    "statement": "Read an integer n, then n integers each on its own line. Print the largest of the n integers.",
+    "test_cases": [
+      {"input": "3\n1\n5\n2\n", "expected_output": "5"},
+      {"input": "4\n-1\n-5\n-2\n-3\n", "expected_output": "-1"},
+      {"input": "1\n7\n", "expected_output": "7"}
+    ]
+  },
+  {
+    "id": "fibonacci-nth",
+    "title": "Nth Fibonacci Number",
+    "difficulty": "Medium",
+    "statement": "Read a single integer n and print the nth Fibonacci number (0-indexed: fib(0) = 0, fib(1) = 1, fib(2) = 1, fib(3) = 2, ...).",
+    "test_cases": [
+      {"input": "0\n", "expected_output": "0"},
+      {"input": "1\n", "expected_output": "1"},
+      {"input": "6\n", "expected_output": "8"},
+      {"input": "10\n", "expected_output": "55"}
+    ]
+  },
+  {
+    "id": "gcd-two-numbers",
+    "title": "GCD of Two Numbers",
+    "difficulty": "Medium",
+    "statement": "Read two non-negative integers, each on its own line, and print their greatest common divisor.",
+    "test_cases": [
+      {"input": "12\n18\n", "expected_output": "6"},
+      {"input": "7\n13\n", "expected_output": "1"},
+      {"input": "100\n75\n", "expected_output": "25"},
+      {"input": "0\n5\n", "expected_output": "5"}
+    ]
+  },
+  {
+    "id": "balanced-parentheses",
+    "title": "Balanced Parentheses",
+    "difficulty": "Hard",
+    "statement": "Read a single line containing only the characters ( ) [ ] { } (possibly empty). Print YES if every bracket is properly opened and closed in the correct order, otherwise print NO.",
+    "test_cases": [
+      {"input": "()[]{}\n", "expected_output": "YES"},
+      {"input": "(]\n", "expected_output": "NO"},
+      {"input": "([)]\n", "expected_output": "NO"},
+      {"input": "{[]}\n", "expected_output": "YES"},
+      {"input": "\n", "expected_output": "YES"},
+      {"input": "(((\n", "expected_output": "NO"}
+    ]
   }
 ]
